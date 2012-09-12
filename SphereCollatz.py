@@ -45,15 +45,19 @@ return the max cycle length in the range [i, j]
         a = j
         b = i
     k = b + 1
+    if(a <= (b / 2)):
+        a = (b / 2)
     for x in range(a, k):
         calcNum = x
         count = 1
         while calcNum > 1:
             if (calcNum % 2) == 0:
+                count += 1
                 calcNum = (calcNum / 2)
             else:
-                calcNum = (calcNum * 3) + 1
-            count += 1
+                count += 2
+                calcNum = ((calcNum * 3) + 1) / 2
+
         if count > maxCount:
             maxCount = count
     

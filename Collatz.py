@@ -42,16 +42,28 @@ return the max cycle length in the range [i, j]
     v = 1
     maxCount = 1
     calcNum = 0
-    k = j + 1
-    for x in range(i, k):
+    a = 0
+    b = 0
+    if i <= j:
+        a = i
+        b = j
+    else:
+        a = j
+        b = i
+    k = b + 1
+    if(a <= (b / 2)):
+        a = (b / 2)
+    for x in range(a, k):
         calcNum = x
         count = 1
         while calcNum > 1:
             if (calcNum % 2) == 0:
+                count += 1
                 calcNum = (calcNum / 2)
             else:
+                count += 2
                 calcNum = (calcNum * 3) + 1
-            count += 1
+
         if count > maxCount:
             maxCount = count
     
