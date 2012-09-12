@@ -30,8 +30,21 @@ return true if that succeeds, false otherwise
 # ------------
 # collatz_eval
 # ------------
-
+"""
+Used to store amount of steps a number takes to satisfy the end condition for
+the 3n+1 problem.  Reduces the time taken to calculated the maximum number of
+steps within a range of numbers.
+"""
 cache = 1000000 * [None]
+
+"""
+Within a range of two numbers, calculates the maximum amount of steps it took
+to satisfy the end condition of the 3n+1 problem
+@param i The beginning of the range
+@param j The end of the range
+
+@return The maximum amount of steps taken within a range of numbers
+"""
 
 def collatz_eval (i, j) :
     """
@@ -41,11 +54,13 @@ return the max cycle length in the range [i, j]
 """
     assert i > 0
     assert j > 0
-    v = 1
     maxCount = 1
     calcNum = 0
     a = 0
     b = 0
+    """
+    Determines if i and j need to be switched due to i being less than j
+    """
     if i <= j:
         a = i
         b = j
@@ -55,19 +70,38 @@ return the max cycle length in the range [i, j]
     k = b + 1
     if(a <= (b / 2)):
         a = (b / 2)
+        
+    """
+    Goes through the range of numbers
+    """
     for x in range(a, k):
         calcNum = x
         count = 1
+        """
+        If the maximum amount of steps has already been calculated
+        """
         if cache[x] != None:
             count = cache[x]
             if count > maxCount:
                 maxCount = count
             continue
+        """
+        While the end condition for 3n+1 problem has not been met
+        """
         while calcNum > 1:
+            """
+            Even case
+            """
             if (calcNum % 2) == 0:
                 temp = calcNum
                 calcNum = (calcNum / 2)
+                """
+                If the maximum for the next number to be checked has been found
+                """
                 if (calcNum < 1000000) and cache[calcNum] != None:
+                    """
+                    If the maximum of the current number has not been found
+                    """
                     if (temp < 1000000) and cache[temp] == None:
                         cache[temp] = 1 + cache[calcNum]
                     count += cache[calcNum]
@@ -76,7 +110,13 @@ return the max cycle length in the range [i, j]
             else:
                 temp = calcNum
                 calcNum = ((calcNum * 3) + 1) / 2
+                """
+                If the maximum for the next number to be checked has been found
+                """
                 if (calcNum < 1000000) and cache[calcNum] != None:
+                    """
+                    If the maximum of the current number has not been found
+                    """
                     if (temp < 1000000) and cache[temp] == None:
                         cache[temp] = 2 + cache[calcNum]
                     count += 1 + cache[calcNum]
@@ -89,7 +129,6 @@ return the max cycle length in the range [i, j]
             cache[x] = count
     
     assert maxCount > 0
-    assert v > 0
     return maxCount
 
 # -------------
