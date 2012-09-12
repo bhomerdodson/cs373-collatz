@@ -1,14 +1,8 @@
-#!/usr/bin/env python
+# -------
+# imports
+# -------
 
-# ---------------------------
-# projects/collatz/Collatz.py
-# Copyright (C) 2012
-# Glenn P. Downing
-# ---------------------------
-
-# ------------
-# collatz_read
-# ------------
+import sys
 
 def collatz_read (r, a) :
     """
@@ -42,8 +36,16 @@ return the max cycle length in the range [i, j]
     v = 1
     maxCount = 1
     calcNum = 0
-    k = j + 1
-    for x in range(i, k):
+    a = 0
+    b = 0
+    if i <= j:
+        a = i
+        b = j
+    else:
+        a = j
+        b = i
+    k = b + 1
+    for x in range(a, k):
         calcNum = x
         count = 1
         while calcNum > 1:
@@ -87,3 +89,13 @@ w is a writer
     while collatz_read(r, a) :
         v = collatz_eval(a[0], a[1])
         collatz_print(w, a[0], a[1], v)
+        
+
+
+
+
+# ----
+# main
+# ----
+
+collatz_solve(sys.stdin, sys.stdout)
