@@ -39,6 +39,36 @@ class TestCollatz (unittest.TestCase) :
         self.assert_(a[0] == 1)
         self.assert_(a[1] == 10)
 
+    def test_read_empty (self) :
+        r = StringIO.StringIO("")
+        a = [0, 0]
+        b = collatz_read(r, a)
+        self.assert_(b == False)
+        
+    def test_read_output_as_input (self) :
+        r = StringIO.StringIO("1 10 20\n5 10 20\n")
+        a = [0,0]
+        b = collatz_read(r, a)
+        self.assert_(b == True)
+        self.assert_(a[0] == 1)
+        self.assert_(a[1] == 10)
+        a = [0,0]
+        b = collatz_read(r, a)
+        self.assert_(b == True)
+        self.assert_(a[0] == 5)
+        self.assert_(a[1] == 10)
+        
+    def test_read_no_separation (self) :
+        r = StringIO.StringIO("1 10 20 5 10 20\n")
+        a = [0,0]
+        b = collatz_read(r, a)
+        self.assert_(b == True)
+        self.assert_(a[0] == 1)
+        self.assert_(a[1] == 10)
+        a = [0,0]
+        b = collatz_read(r, a)
+        self.assert_(b == False)
+
     # ----
     # eval
     # ----
@@ -58,6 +88,18 @@ class TestCollatz (unittest.TestCase) :
     def test_eval_4 (self) :
         v = collatz_eval(900, 1000)
         self.assert_(v == 174)
+        
+    def test_eval_swapped (self) :
+        v = collatz_eval(10, 1)
+        self.assert_(v == 20)
+        
+    def test_eval_lowest_possible_evaluation (self) :
+        v = collatz_eval(1, 1)
+        self.assert_(v == 1)
+        
+    def test_eval_huge_range (self) :
+        v = collatz_eval(1, 999999)
+        self.assert_(v == 525)
 
     # -----
     # print
@@ -67,6 +109,22 @@ class TestCollatz (unittest.TestCase) :
         w = StringIO.StringIO()
         collatz_print(w, 1, 10, 20)
         self.assert_(w.getvalue() == "1 10 20\n")
+        
+    def test_print_swapped (self) :
+        w = StringIO.StringIO()
+        collatz_print(w, 10, 1, 20)
+        self.assert_(w.getvalue() == "10 1 20\n")
+    
+    def test_print_empty (self) :
+        w = StringIO.StringIO()
+        collatz_print(w, "", "", "")
+        self.assert_(w.getvalue() == "  \n")
+        
+    def test_print_multiple (self) :
+        w = StringIO.StringIO()
+        collatz_print(w, 1, 10, 20)
+        collatz_print(w, 10, 1, 20)
+        self.assert_(w.getvalue() == "1 10 20\n10 1 20\n")
 
     # -----
     # solve
@@ -77,6 +135,24 @@ class TestCollatz (unittest.TestCase) :
         w = StringIO.StringIO()
         collatz_solve(r, w)
         self.assert_(w.getvalue() == "1 10 20\n100 200 125\n201 210 89\n900 1000 174\n")
+        
+    def test_solve_swapped (self) :
+        r = StringIO.StringIO("10 1\n200 100\n210 201\n1000 900\n")
+        w = StringIO.StringIO()
+        collatz_solve(r, w)
+        self.assert_(w.getvalue() == "10 1 20\n200 100 125\n210 201 89\n1000 900 174\n")
+        
+    def test_solve_small_and_huge_range (self) :
+        r = StringIO.StringIO("1 1\n1 999999\n")
+        w = StringIO.StringIO()
+        collatz_solve(r, w)
+        self.assert_(w.getvalue() == "1 1 1\n1 999999 525\n")
+        
+    def test_solve_empty (self) :
+        r = StringIO.StringIO("")
+        w = StringIO.StringIO()
+        collatz_solve(r, w)
+        self.assert_(w.getvalue() == "")
 
 # ----
 # main
