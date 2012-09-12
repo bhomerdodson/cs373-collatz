@@ -31,6 +31,8 @@ return true if that succeeds, false otherwise
 # collatz_eval
 # ------------
 
+cache = 1000000 * [None]
+
 def collatz_eval (i, j) :
     """
 i is the beginning of the range, inclusive
@@ -56,16 +58,29 @@ return the max cycle length in the range [i, j]
     for x in range(a, k):
         calcNum = x
         count = 1
+        if cache[x] != None:
+            count = cache[x]
+            if count > maxCount:
+                maxCount = count
+            continue
         while calcNum > 1:
             if (calcNum % 2) == 0:
-                count += 1
                 calcNum = (calcNum / 2)
+                if (calcNum < 1000000) and cache[calcNum] != None:
+                    count += cache[calcNum]
+                    break
+                count += 1
             else:
+                calcNum = ((calcNum * 3) + 1) / 2
+                if (calcNum < 1000000) and cache[calcNum] != None:
+                    count += 1 + cache[calcNum]
+                    break
                 count += 2
-                calcNum = (calcNum * 3) + 1
 
         if count > maxCount:
             maxCount = count
+        if cache[x] == None:
+            cache[x] = count
     
     assert maxCount > 0
     assert v > 0
