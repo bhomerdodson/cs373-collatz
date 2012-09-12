@@ -65,14 +65,20 @@ return the max cycle length in the range [i, j]
             continue
         while calcNum > 1:
             if (calcNum % 2) == 0:
+                temp = calcNum
                 calcNum = (calcNum / 2)
                 if (calcNum < 1000000) and cache[calcNum] != None:
+                    if (temp < 1000000) and cache[temp] == None:
+                        cache[temp] = 1 + cache[calcNum]
                     count += cache[calcNum]
                     break
                 count += 1
             else:
+                temp = calcNum
                 calcNum = ((calcNum * 3) + 1) / 2
                 if (calcNum < 1000000) and cache[calcNum] != None:
+                    if (temp < 1000000) and cache[temp] == None:
+                        cache[temp] = 2 + cache[calcNum]
                     count += 1 + cache[calcNum]
                     break
                 count += 2
